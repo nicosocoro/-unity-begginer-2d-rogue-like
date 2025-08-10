@@ -3,7 +3,8 @@ using UnityEngine.Tilemaps;
 
 public class BoardManager : MonoBehaviour
 {
-    private Tilemap m_Tilemap;
+    private Tilemap _tilemap;
+    private CellData[,] _cells;
 
     public int Width;
     public int Height;
@@ -13,7 +14,8 @@ public class BoardManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        m_Tilemap = GetComponentInChildren<Tilemap>();
+        _tilemap = GetComponentInChildren<Tilemap>();
+        _cells = new CellData[Width, Height];
         BuildWalls();
         BuildMap();
     }
@@ -23,13 +25,15 @@ public class BoardManager : MonoBehaviour
         for (int x = 0; x < Height; ++x)
         {
             int wallTileNumber = Random.Range(0, WallTiles.Length);
-            m_Tilemap.SetTile(new Vector3Int(x, 0, 0), WallTiles[wallTileNumber]);
+            _tilemap.SetTile(new Vector3Int(x, 0, 0), WallTiles[wallTileNumber]);
+            _cells[x, 0].IsPassable = false;
         }
 
         for (int y = 0; y < Height; ++y)
         {
             int wallTileNumber = Random.Range(0, WallTiles.Length);
-            m_Tilemap.SetTile(new Vector3Int(0, y, 0), WallTiles[wallTileNumber]);
+            _tilemap.SetTile(new Vector3Int(0, y, 0), WallTiles[wallTileNumber]);
+            _cells[0, y].IsPassable = false;
         }
     }
 
@@ -40,8 +44,14 @@ public class BoardManager : MonoBehaviour
             for (int x = 1; x < Width; ++x)
             {
                 int tileNumber = Random.Range(0, GroundTiles.Length);
-                m_Tilemap.SetTile(new Vector3Int(x, y, 0), GroundTiles[tileNumber]);
+                _tilemap.SetTile(new Vector3Int(x, y, 0), GroundTiles[tileNumber]);
+                _cells[x, y].IsPassable = true;
             }
         }
+    }
+
+    private struct CellData
+    {
+        public bool IsPassable;
     }
 }
