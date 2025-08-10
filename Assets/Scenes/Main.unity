@@ -206,7 +206,7 @@ Transform:
   m_GameObject: {fileID: 196856058}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 4, y: 4, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -266,6 +266,7 @@ GameObject:
   m_Component:
   - component: {fileID: 548661645}
   - component: {fileID: 548661644}
+  - component: {fileID: 548661646}
   m_Layer: 0
   m_Name: BoardManager
   m_TagString: Untagged
@@ -301,6 +302,27 @@ Transform:
   - {fileID: 1444514664}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &548661646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 548661643}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cbc9781da2da5f4aabdbf317fb71dac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Width: 8
+  Height: 8
+  GroundTiles:
+  - {fileID: 11400000, guid: 4567497503edf364ab1b061aa4aee530, type: 2}
+  - {fileID: 11400000, guid: d1ebc25086df15f4986c71a1de623c7a, type: 2}
+  - {fileID: 11400000, guid: c06cb88541d1e124d869eea7cdc97b99, type: 2}
+  - {fileID: 11400000, guid: 8222b5cf516f89841a85ea20cedb3334, type: 2}
+  WallTiles:
+  - {fileID: 11400000, guid: bfe5653f55b2a7f48babdf6c6a0b7550, type: 2}
 --- !u!1 &1444514663
 GameObject:
   m_ObjectHideFlags: 0
