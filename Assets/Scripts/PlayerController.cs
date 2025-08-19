@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
         HandleInput();
     }
 
-    public event Action OnTurnFinished;
+    public event Action OnPlayerMoved;
 
     private void HandleInput()
     {
@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour
         if (m_Board.IsCellAvailableForPlayer(targetCell))
         {
             MoveTo(targetCell);
-            OnTurnFinished();
+            OnPlayerMoved?.Invoke();
         }
     }
 

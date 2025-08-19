@@ -15,11 +15,6 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         BoardManager.Initialize();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        PlayerController.Spawn(BoardManager, BoardManager.GetInitialPosition());
     }
 }

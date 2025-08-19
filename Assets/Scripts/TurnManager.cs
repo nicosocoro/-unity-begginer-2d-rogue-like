@@ -4,16 +4,16 @@ public class TurnManager
 {
     public int Turn { get; private set; } = 0;
 
-    private PlayerController _player;
+    private readonly PlayerController _player;
 
     public TurnManager(PlayerController player)
     {
         _player = player;
 
-        _player.OnTurnFinished += OnPlayerMoved;
+        _player.OnPlayerMoved += FinishTurn;
     }
 
-    public void OnPlayerMoved()
+    private void FinishTurn()
     { 
         Turn++;
         Debug.Log($"Turn {Turn} finished.");

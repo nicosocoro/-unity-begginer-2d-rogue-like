@@ -6,14 +6,12 @@ public class BoardManager : MonoBehaviour
     private Tilemap _tilemap;
     private Grid _grid;
     private CellData[,] _cells;
-    public PlayerController PlayerController;
 
     public int Width;
     public int Height;
     public Tile[] GroundTiles;
     public Tile[] WallTiles;
 
-    // Start is called before the first frame update
     public void Initialize()
     {
         _tilemap = GetComponentInChildren<Tilemap>();
@@ -21,7 +19,11 @@ public class BoardManager : MonoBehaviour
         _cells = new CellData[Width, Height];
 
         BuildMap();
-        SpawnPlayer();
+    }
+
+    public Vector2Int GetInitialPosition()
+    { 
+        return new Vector2Int(1, 1);
     }
 
     public Vector3Int GetCellPosition(Vector2Int cell)
@@ -62,11 +64,6 @@ public class BoardManager : MonoBehaviour
                 }
             }
         }
-    }
-
-    private void SpawnPlayer()
-    {
-        PlayerController.Spawn(this, new Vector2Int(1, 1));
     }
 
     private struct CellData
