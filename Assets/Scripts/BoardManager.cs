@@ -73,7 +73,7 @@ public class BoardManager : MonoBehaviour
     private void GenerateFood()
     {
         var createdFoodCounter = 0;
-        var foodInMapAmount = 5;
+        var foodInMapAmount = Random.Range(2, 5);
         Vector2Int[] createdFoodPositions = new Vector2Int[foodInMapAmount];
         var initialPosition = GetInitialPosition();
 
