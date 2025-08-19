@@ -6,8 +6,8 @@ public class BoardManager : MonoBehaviour
     private Tilemap _tilemap;
     private Grid _grid;
     private CellData[,] _cells;
-
     public PlayerController PlayerController;
+
     public int Width;
     public int Height;
     public Tile[] GroundTiles;
@@ -27,6 +27,19 @@ public class BoardManager : MonoBehaviour
     public Vector3Int GetCellPosition(Vector2Int cell)
     {
         return _grid.WorldToCell((Vector3Int)cell);
+    }
+
+    public bool IsCellAvailableForPlayer(Vector2Int cell)
+    {
+        var x = cell.x;
+        var y = cell.y;
+
+        if (x < 0 || y < 0 || x >= Width || y >= Height)
+        {
+            return false;
+        }
+
+        return _cells[x, y].IsPassable;
     }
 
     private void BuildMap()
