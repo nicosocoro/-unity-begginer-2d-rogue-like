@@ -1,3 +1,5 @@
+using System.Linq;
+using System.Numerics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -11,6 +13,7 @@ public class BoardManager : MonoBehaviour
     public int Height;
     public Tile[] GroundTiles;
     public Tile[] WallTiles;
+    public GameObject foodPrefab;
 
     public void Initialize()
     {
@@ -19,6 +22,7 @@ public class BoardManager : MonoBehaviour
         _cells = new CellData[Width, Height];
 
         BuildMap();
+        GenerateFood();
     }
 
     public Vector2Int GetInitialPosition()
@@ -66,8 +70,39 @@ public class BoardManager : MonoBehaviour
         }
     }
 
+    private void GenerateFood()
+    {
+        var createdFoodCounter = 0;
+        var foodInMapAmount = 5;
+        Vector2Int[] createdFoodPositions = new Vector2Int[foodInMapAmount];
+        var initialPosition = GetInitialPosition();
+
+        while (createdFoodCounter < foodInMapAmount)
+        {
+            var x = Random.Range(1, Width - 1);
+            var y = Random.Range(1, Height - 1);
+            var cellPosition = new Vector2Int(x, y);
+            
+            if (initialPosition == cellPosition) continue;
+            if (createdFoodPositions.Contains(cellPosition)) continue;
+
+            var newFood = Instantiate(foodPrefab);
+            newFood.transform.position = new Vector3Int(x, y, 0);
+            var cell = new CellData
+            {
+                IsPassable = true,
+                ContainedObject = newFood
+            };
+
+            _cells[x, y] = cell;
+            createdFoodPositions[createdFoodCounter] = cellPosition;
+            createdFoodCounter++;
+        }
+    }
+
     private struct CellData
     {
         public bool IsPassable;
+        public GameObject ContainedObject;
     }
 }

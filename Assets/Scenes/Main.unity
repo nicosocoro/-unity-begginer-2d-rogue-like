@@ -322,6 +322,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c06cb88541d1e124d869eea7cdc97b99, type: 2}
   WallTiles:
   - {fileID: 11400000, guid: bfe5653f55b2a7f48babdf6c6a0b7550, type: 2}
+  foodPrefab: {fileID: 5270079208278105683, guid: a56be142e47fb294393647279414c949, type: 3}
 --- !u!1 &615556737
 GameObject:
   m_ObjectHideFlags: 0
@@ -514,7 +515,7 @@ Transform:
   m_GameObject: {fileID: 1263106507}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.031715, y: 4.290411, z: 0}
+  m_LocalPosition: {x: -3.43, y: 4.89, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
