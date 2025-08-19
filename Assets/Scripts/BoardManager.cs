@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using UnityEngine;
@@ -13,7 +14,7 @@ public class BoardManager : MonoBehaviour
     public int Height;
     public Tile[] GroundTiles;
     public Tile[] WallTiles;
-    public GameObject foodPrefab;
+    public List<GameObject> foodPrefabs;
 
     public void Initialize()
     {
@@ -86,6 +87,7 @@ public class BoardManager : MonoBehaviour
             if (initialPosition == cellPosition) continue;
             if (createdFoodPositions.Contains(cellPosition)) continue;
 
+            var foodPrefab = foodPrefabs[Random.Range(0, foodPrefabs.Count)];
             var newFood = Instantiate(foodPrefab);
             newFood.transform.position = new Vector3Int(x, y, 0);
             var cell = new CellData
