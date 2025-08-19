@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class TurnManager
@@ -5,6 +6,8 @@ public class TurnManager
     public int Turn { get; private set; } = 0;
 
     private readonly PlayerController _player;
+
+    public event Action OnTurnFinished;
 
     public TurnManager(PlayerController player)
     {
@@ -16,6 +19,8 @@ public class TurnManager
     private void FinishTurn()
     { 
         Turn++;
+        OnTurnFinished?.Invoke();
+        
         Debug.Log($"Turn {Turn} finished.");
     }
 }
