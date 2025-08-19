@@ -20,6 +20,8 @@ public class PlayerController : MonoBehaviour
         HandleInput();
     }
 
+    public event Action OnTurnFinished;
+
     private void HandleInput()
     {
         Vector2Int targetCell = m_CellPosition;
@@ -52,6 +54,7 @@ public class PlayerController : MonoBehaviour
         if (m_Board.IsCellAvailableForPlayer(targetCell))
         {
             MoveTo(targetCell);
+            OnTurnFinished();
         }
     }
 

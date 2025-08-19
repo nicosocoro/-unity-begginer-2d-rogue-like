@@ -14,7 +14,7 @@ public class BoardManager : MonoBehaviour
     public Tile[] WallTiles;
 
     // Start is called before the first frame update
-    void Start()
+    public void Initialize()
     {
         _tilemap = GetComponentInChildren<Tilemap>();
         _grid = GetComponentInChildren<Grid>();
