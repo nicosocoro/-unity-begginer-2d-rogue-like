@@ -4,15 +4,17 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    private BoardManager m_Board;
-    private Vector2Int m_CellPosition;
+    private BoardManager _board;
+    private Vector2Int _currentPosition;
+
+    public event Action<Vector2Int> OnPlayerMoved;
 
     public void Spawn(BoardManager boardManager, Vector2Int cell)
     {
-        m_Board = boardManager;
-        m_CellPosition = cell;
+        _board = boardManager;
+        _currentPosition = cell;
 
-        transform.position = m_Board.GetCellPosition(m_CellPosition);
+        transform.position = _board.GetCellPosition(_currentPosition);
     }
 
     public void Update()
@@ -20,30 +22,28 @@ public class PlayerController : MonoBehaviour
         HandleInput();
     }
 
-    public event Action OnPlayerMoved;
-
     private void HandleInput()
     {
-        Vector2Int targetCell = m_CellPosition;
+        Vector2Int targetCell = _currentPosition;
 
         if (Keyboard.current.upArrowKey.wasPressedThisFrame)
         {
-            targetCell = m_CellPosition + Vector2Int.up;
+            targetCell = _currentPosition + Vector2Int.up;
         }
         if (Keyboard.current.downArrowKey.wasPressedThisFrame)
         {
-            targetCell = m_CellPosition + Vector2Int.down;
+            targetCell = _currentPosition + Vector2Int.down;
         }
         if (Keyboard.current.leftArrowKey.wasPressedThisFrame)
         {
-            targetCell = m_CellPosition + Vector2Int.left;
+            targetCell = _currentPosition + Vector2Int.left;
         }
         if (Keyboard.current.rightArrowKey.wasPressedThisFrame)
         {
-            targetCell = m_CellPosition + Vector2Int.right;
+            targetCell = _currentPosition + Vector2Int.right;
         }
 
-        if (targetCell != m_CellPosition)
+        if (targetCell != _currentPosition)
         {
             TryMoveTo(targetCell);
         }
@@ -51,16 +51,16 @@ public class PlayerController : MonoBehaviour
 
     private void TryMoveTo(Vector2Int targetCell)
     {
-        if (m_Board.IsCellAvailableForPlayer(targetCell))
+        if (_board.IsCellAvailableForPlayer(targetCell))
         {
             MoveTo(targetCell);
-            OnPlayerMoved?.Invoke();
+            OnPlayerMoved?.Invoke(targetCell);
         }
     }
 
     private void MoveTo(Vector2Int targetCell)
     {
-        m_CellPosition = targetCell;
-        transform.position = m_Board.GetCellPosition(m_CellPosition);
+        _currentPosition = targetCell;
+        transform.position = _board.GetCellPosition(_currentPosition);
     }
 }

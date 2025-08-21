@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -14,7 +13,8 @@ public class BoardManager : MonoBehaviour
     public int Height;
     public Tile[] GroundTiles;
     public Tile[] WallTiles;
-    public List<GameObject> foodPrefabs;
+    public List<FoodObject> FoodPrefabs;
+    public PlayerController Player;
 
     public void Initialize()
     {
@@ -22,12 +22,14 @@ public class BoardManager : MonoBehaviour
         _grid = GetComponentInChildren<Grid>();
         _cells = new CellData[Width, Height];
 
+        Player.OnPlayerMoved += HandlePlayerMoved;
+
         BuildMap();
         GenerateFood();
     }
 
     public Vector2Int GetInitialPosition()
-    { 
+    {
         return new Vector2Int(1, 1);
     }
 
@@ -47,6 +49,11 @@ public class BoardManager : MonoBehaviour
         }
 
         return _cells[x, y].IsPassable;
+    }
+
+    private void HandlePlayerMoved(Vector2Int newPosition)
+    {
+        _cells[newPosition.x, newPosition.y].ContainedObject?.OnPlayerEntered();
     }
 
     private void BuildMap()
@@ -73,6 +80,28 @@ public class BoardManager : MonoBehaviour
 
     private void GenerateFood()
     {
+        if (FoodPrefabs == null)
+        {
+            Debug.LogError("FoodPrefabs list is null!");
+            return;
+        }
+
+        if (FoodPrefabs.Count == 0)
+        {
+            Debug.LogError("FoodPrefabs list is empty!");
+            return;
+        }
+
+        // Check for null prefabs in the list
+        for (int i = 0; i < FoodPrefabs.Count; i++)
+        {
+            if (FoodPrefabs[i] == null)
+            {
+                Debug.LogError($"FoodPrefabs[{i}] is null!");
+                return;
+            }
+        }
+
         var createdFoodCounter = 0;
         var foodInMapAmount = Random.Range(2, 5);
         Vector2Int[] createdFoodPositions = new Vector2Int[foodInMapAmount];
@@ -83,12 +112,12 @@ public class BoardManager : MonoBehaviour
             var x = Random.Range(1, Width - 1);
             var y = Random.Range(1, Height - 1);
             var cellPosition = new Vector2Int(x, y);
-            
+
             if (initialPosition == cellPosition) continue;
             if (createdFoodPositions.Contains(cellPosition)) continue;
 
-            var foodPrefab = foodPrefabs[Random.Range(0, foodPrefabs.Count)];
-            var newFood = Instantiate(foodPrefab);
+            var foodPrefab = FoodPrefabs[Random.Range(0, FoodPrefabs.Count)];
+            FoodObject newFood = Instantiate(foodPrefab);
             newFood.transform.position = new Vector3Int(x, y, 0);
             var cell = new CellData
             {
@@ -105,6 +134,6 @@ public class BoardManager : MonoBehaviour
     private struct CellData
     {
         public bool IsPassable;
-        public GameObject ContainedObject;
+        public CellObject ContainedObject;
     }
 }

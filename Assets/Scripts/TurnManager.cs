@@ -16,8 +16,8 @@ public class TurnManager
         _player.OnPlayerMoved += FinishTurn;
     }
 
-    private void FinishTurn()
-    { 
+    private void FinishTurn(Vector2Int newPosition)
+    {
         Turn++;
         OnTurnFinished?.Invoke();
         
