@@ -5,24 +5,24 @@ public class GameManager : MonoBehaviour
 {
     public BoardManager BoardManager;
     public PlayerController PlayerController;
+    public FoodManager FoodManager;
     public UIDocument uiFood;
 
     private TurnManager _turnManager;
-    private FoodManager _foodManager;
     private Label _uiLabel;
 
     void Awake()
     {
         _turnManager = new TurnManager(PlayerController);
-        _foodManager = new FoodManager();
 
         _turnManager.OnTurnFinished += OnTurnFinished;
         _uiLabel = uiFood.rootVisualElement.Q<Label>("FoodLabel");
+
+        BoardManager.OnFoodCreated += FoodManager.OnFoodCreated;
     }
 
     void Start()
     {
-
         BoardManager.Initialize();
         PlayerController.Spawn(BoardManager, BoardManager.GetInitialPosition());
     }
@@ -34,11 +34,11 @@ public class GameManager : MonoBehaviour
 
     void UpdateFoodLabel()
     {
-        _uiLabel.text = $"Food: {_foodManager.Food}";
+        _uiLabel.text = $"Food: {FoodManager.Food}";
     }
 
     public void OnTurnFinished()
     {
-        _foodManager.ConsumeFood();
+        FoodManager.ConsumeFood();
     }
 }

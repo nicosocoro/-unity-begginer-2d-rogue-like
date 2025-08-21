@@ -1,3 +1,4 @@
+// using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -15,6 +16,8 @@ public class BoardManager : MonoBehaviour
     public Tile[] WallTiles;
     public List<FoodObject> FoodPrefabs;
     public PlayerController Player;
+
+    public event System.Action<FoodObject> OnFoodCreated;
 
     public void Initialize()
     {
@@ -80,28 +83,6 @@ public class BoardManager : MonoBehaviour
 
     private void GenerateFood()
     {
-        if (FoodPrefabs == null)
-        {
-            Debug.LogError("FoodPrefabs list is null!");
-            return;
-        }
-
-        if (FoodPrefabs.Count == 0)
-        {
-            Debug.LogError("FoodPrefabs list is empty!");
-            return;
-        }
-
-        // Check for null prefabs in the list
-        for (int i = 0; i < FoodPrefabs.Count; i++)
-        {
-            if (FoodPrefabs[i] == null)
-            {
-                Debug.LogError($"FoodPrefabs[{i}] is null!");
-                return;
-            }
-        }
-
         var createdFoodCounter = 0;
         var foodInMapAmount = Random.Range(2, 5);
         Vector2Int[] createdFoodPositions = new Vector2Int[foodInMapAmount];
@@ -128,6 +109,7 @@ public class BoardManager : MonoBehaviour
             _cells[x, y] = cell;
             createdFoodPositions[createdFoodCounter] = cellPosition;
             createdFoodCounter++;
+            OnFoodCreated?.Invoke(newFood);
         }
     }
 

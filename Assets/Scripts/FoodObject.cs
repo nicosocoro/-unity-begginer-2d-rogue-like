@@ -1,10 +1,12 @@
-using UnityEngine;
-
 public class FoodObject : CellObject
 {
+    public int FoodEarnedOnEntered;
+
+    public event System.Action<FoodObject> OnFoodConsumed;
+
     public override void OnPlayerEntered()
     {
-        Debug.Log("Food eaten!");
+        OnFoodConsumed?.Invoke(this);
         Destroy(gameObject);
     }
 }
