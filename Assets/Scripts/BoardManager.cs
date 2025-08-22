@@ -53,7 +53,8 @@ public class BoardManager : MonoBehaviour
             return false;
         }
 
-        return _cells[x, y].IsPassable;
+        var currentCell = _cells[x, y];
+        return currentCell.IsPassable && currentCell.ContainedObject?.OnPlayerTryingToEnter() != false;
     }
 
     public void SetTileToCell(Vector2Int position, Tile tile)
@@ -110,7 +111,7 @@ public class BoardManager : MonoBehaviour
             newObstacle.OnInit(cellPosition);
             var cell = new CellData
             {
-                IsPassable = false,
+                IsPassable = true,
                 ContainedObject = newObstacle
             };
 
