@@ -326,7 +326,7 @@ MonoBehaviour:
   FoodPrefabs:
   - {fileID: -997849944381644872, guid: a56be142e47fb294393647279414c949, type: 3}
   - {fileID: 2663914227217187178, guid: 9618263fd6e984648b16c8da4ebf9cb7, type: 3}
-  WallPrefab: {fileID: 6069803617625050534, guid: 44c0045b0d06e2441a86a8d68fabf95b, type: 3}
+  ObstaclePrefab: {fileID: 6069803617625050534, guid: 44c0045b0d06e2441a86a8d68fabf95b, type: 3}
   Player: {fileID: 1263106508}
 --- !u!114 &548661647
 MonoBehaviour:

@@ -3,6 +3,7 @@ using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance;
     public BoardManager BoardManager;
     public PlayerController PlayerController;
     public FoodManager FoodManager;
@@ -13,6 +14,15 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
         _turnManager = new TurnManager(PlayerController);
 
         _turnManager.OnTurnFinished += OnTurnFinished;

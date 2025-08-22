@@ -1,6 +1,4 @@
-// using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -16,7 +14,7 @@ public class BoardManager : MonoBehaviour
     public Tile[] GroundTiles;
     public Tile[] WallTiles;
     public List<FoodObject> FoodPrefabs;
-    public WallObject WallPrefab;
+    public ObstacleObject ObstaclePrefab;
     public PlayerController Player;
 
     public event System.Action<FoodObject> OnFoodCreated;
@@ -31,7 +29,7 @@ public class BoardManager : MonoBehaviour
         Player.OnPlayerMoved += HandlePlayerMoved;
 
         BuildMap();
-        GenerateWalls();
+        GenerateObstacles();
         GenerateFood();
     }
 
@@ -56,6 +54,11 @@ public class BoardManager : MonoBehaviour
         }
 
         return _cells[x, y].IsPassable;
+    }
+
+    public void SetTileToCell(Vector2Int position, Tile tile)
+    {
+        _tilemap.SetTile(new Vector3Int(position.x, position.y, 0), tile);
     }
 
     private void HandlePlayerMoved(Vector2Int newPosition)
@@ -89,31 +92,31 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    private void GenerateWalls()
+    private void GenerateObstacles()
     {
-        var createdWallCounter = 0;
-        var wallsInMapAmount = Random.Range(2, 5);
+        var createdCounter = 0;
+        var obstacleInMapAmount = Random.Range(2, 5);
         var initialPosition = GetInitialPosition();
 
-        while (createdWallCounter < wallsInMapAmount)
+        while (createdCounter < obstacleInMapAmount)
         {
             Vector2Int cellPosition = GenerateRandomCell();
 
             if (initialPosition == cellPosition) continue;
             if (!_availableCells[cellPosition.x, cellPosition.y]) continue;
 
-            WallObject newWall = Instantiate(WallPrefab);
-            newWall.transform.position = new Vector3Int(cellPosition.x, cellPosition.y, 0);
-            newWall.OnInit(cellPosition);
+            ObstacleObject newObstacle = Instantiate(ObstaclePrefab);
+            newObstacle.transform.position = new Vector3Int(cellPosition.x, cellPosition.y, 0);
+            newObstacle.OnInit(cellPosition);
             var cell = new CellData
             {
                 IsPassable = false,
-                ContainedObject = newWall
+                ContainedObject = newObstacle
             };
 
             _cells[cellPosition.x, cellPosition.y] = cell;
             _availableCells[cellPosition.x, cellPosition.y] = false;
-            createdWallCounter++;
+            createdCounter++;
         }
     }
 

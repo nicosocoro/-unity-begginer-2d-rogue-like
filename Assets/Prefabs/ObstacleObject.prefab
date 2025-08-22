@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4724290271621063951}
   - component: {fileID: 6069803617625050534}
   m_Layer: 0
-  m_Name: WallObject
+  m_Name: ObstacleObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,3 +44,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aae5c28d9821e174d85fe89e5bf1b82b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  WallTile: {fileID: 11400000, guid: 7811360150b74be40848f7eaf9121a65, type: 2}
