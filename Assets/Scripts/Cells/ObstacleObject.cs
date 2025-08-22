@@ -19,7 +19,7 @@ public class ObstacleObject : CellObject
 
         if (_lifes <= 0)
         {
-            Destroy(gameObject);
+            OnDestroy();
             return true;
         }
 

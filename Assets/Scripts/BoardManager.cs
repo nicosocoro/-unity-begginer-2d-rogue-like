@@ -62,6 +62,15 @@ public class BoardManager : MonoBehaviour
         _tilemap.SetTile(new Vector3Int(position.x, position.y, 0), tile);
     }
 
+    public void OnFreeCell(Vector2Int position)
+    {
+        Debug.Log($"Freeing cell at {position}");
+        _availableCells[position.x, position.y] = true;
+        _cells[position.x, position.y] = new CellData { IsPassable = true, ContainedObject = null };
+
+        SetGroundTileTo(position.x, position.y);
+    }
+
     private void HandlePlayerMoved(Vector2Int newPosition)
     {
         _cells[newPosition.x, newPosition.y].ContainedObject?.OnPlayerEntered();
@@ -84,13 +93,18 @@ public class BoardManager : MonoBehaviour
                 }
                 else
                 {
-                    int tileNumber = Random.Range(0, GroundTiles.Length);
-                    _tilemap.SetTile(new Vector3Int(x, y, 0), GroundTiles[tileNumber]);
+                    SetGroundTileTo(y, x);
                     _cells[x, y].IsPassable = true;
                     _availableCells[x, y] = initialPosition != new Vector2Int(x, y);
                 }
             }
         }
+    }
+
+    private void SetGroundTileTo(int x, int y)
+    {
+        int tileNumber = Random.Range(0, GroundTiles.Length);
+        _tilemap.SetTile(new Vector3Int(x, y, 0), GroundTiles[tileNumber]);
     }
 
     private void GenerateObstacles()
@@ -136,6 +150,7 @@ public class BoardManager : MonoBehaviour
 
             var foodPrefab = FoodPrefabs[Random.Range(0, FoodPrefabs.Count)];
             FoodObject newFood = Instantiate(foodPrefab);
+            newFood.OnInit(cellPosition);
             newFood.transform.position = new Vector3Int(cellPosition.x, cellPosition.y, 0);
             var cellData = new CellData
             {
