@@ -16,6 +16,7 @@ public class BoardManager : MonoBehaviour
     public Tile[] GroundTiles;
     public Tile[] WallTiles;
     public List<FoodObject> FoodPrefabs;
+    public WallObject WallPrefab;
     public PlayerController Player;
 
     public event System.Action<FoodObject> OnFoodCreated;
@@ -30,6 +31,7 @@ public class BoardManager : MonoBehaviour
         Player.OnPlayerMoved += HandlePlayerMoved;
 
         BuildMap();
+        GenerateWalls();
         GenerateFood();
     }
 
@@ -87,6 +89,34 @@ public class BoardManager : MonoBehaviour
         }
     }
 
+    private void GenerateWalls()
+    {
+        var createdWallCounter = 0;
+        var wallsInMapAmount = Random.Range(2, 5);
+        var initialPosition = GetInitialPosition();
+
+        while (createdWallCounter < wallsInMapAmount)
+        {
+            Vector2Int cellPosition = GenerateRandomCell();
+
+            if (initialPosition == cellPosition) continue;
+            if (!_availableCells[cellPosition.x, cellPosition.y]) continue;
+
+            WallObject newWall = Instantiate(WallPrefab);
+            newWall.transform.position = new Vector3Int(cellPosition.x, cellPosition.y, 0);
+            newWall.OnInit(cellPosition);
+            var cell = new CellData
+            {
+                IsPassable = false,
+                ContainedObject = newWall
+            };
+
+            _cells[cellPosition.x, cellPosition.y] = cell;
+            _availableCells[cellPosition.x, cellPosition.y] = false;
+            createdWallCounter++;
+        }
+    }
+
     private void GenerateFood()
     {
         var createdFoodCounter = 0;
@@ -95,27 +125,32 @@ public class BoardManager : MonoBehaviour
 
         while (createdFoodCounter < foodInMapAmount)
         {
-            var x = Random.Range(1, Width - 1);
-            var y = Random.Range(1, Height - 1);
-            var cellPosition = new Vector2Int(x, y);
+            Vector2Int cellPosition = GenerateRandomCell();
 
             if (initialPosition == cellPosition) continue;
-            if (!_availableCells[x, y]) continue;
+            if (!_availableCells[cellPosition.x, cellPosition.y]) continue;
 
             var foodPrefab = FoodPrefabs[Random.Range(0, FoodPrefabs.Count)];
             FoodObject newFood = Instantiate(foodPrefab);
-            newFood.transform.position = new Vector3Int(x, y, 0);
-            var cell = new CellData
+            newFood.transform.position = new Vector3Int(cellPosition.x, cellPosition.y, 0);
+            var cellData = new CellData
             {
                 IsPassable = true,
                 ContainedObject = newFood
             };
 
-            _cells[x, y] = cell;
+            _cells[cellPosition.x, cellPosition.y] = cellData;
             createdFoodCounter++;
-            _availableCells[x, y] = false;
+            _availableCells[cellPosition.x, cellPosition.y] = false;
             OnFoodCreated?.Invoke(newFood);
         }
+    }
+
+    private Vector2Int GenerateRandomCell()
+    {
+        var x = Random.Range(1, Width - 1);
+        var y = Random.Range(1, Height - 1);
+        return new Vector2Int(x, y);
     }
 
     private struct CellData
