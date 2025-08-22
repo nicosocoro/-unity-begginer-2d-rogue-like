@@ -9,6 +9,7 @@ public class BoardManager : MonoBehaviour
     private Tilemap _tilemap;
     private Grid _grid;
     private CellData[,] _cells;
+    private bool[,] _availableCells;
 
     public int Width;
     public int Height;
@@ -24,6 +25,7 @@ public class BoardManager : MonoBehaviour
         _tilemap = GetComponentInChildren<Tilemap>();
         _grid = GetComponentInChildren<Grid>();
         _cells = new CellData[Width, Height];
+        _availableCells = new bool[Width, Height];
 
         Player.OnPlayerMoved += HandlePlayerMoved;
 
@@ -61,21 +63,25 @@ public class BoardManager : MonoBehaviour
 
     private void BuildMap()
     {
+        var initialPosition = GetInitialPosition();
         for (int y = 0; y < Height; ++y)
         {
             for (int x = 0; x < Width; ++x)
             {
-                if (x == 0 || y == 0 || x == Width - 1 || y == Height - 1)
+                bool isWallTile = x == 0 || y == 0 || x == Width - 1 || y == Height - 1;
+                if (isWallTile)
                 {
                     int wallTileNumber = Random.Range(0, WallTiles.Length);
                     _tilemap.SetTile(new Vector3Int(x, y, 0), WallTiles[wallTileNumber]);
                     _cells[x, y].IsPassable = false;
+                    _availableCells[x, y] = false;
                 }
                 else
                 {
                     int tileNumber = Random.Range(0, GroundTiles.Length);
                     _tilemap.SetTile(new Vector3Int(x, y, 0), GroundTiles[tileNumber]);
                     _cells[x, y].IsPassable = true;
+                    _availableCells[x, y] = initialPosition != new Vector2Int(x, y);
                 }
             }
         }
@@ -85,7 +91,6 @@ public class BoardManager : MonoBehaviour
     {
         var createdFoodCounter = 0;
         var foodInMapAmount = Random.Range(2, 5);
-        Vector2Int[] createdFoodPositions = new Vector2Int[foodInMapAmount];
         var initialPosition = GetInitialPosition();
 
         while (createdFoodCounter < foodInMapAmount)
@@ -95,7 +100,7 @@ public class BoardManager : MonoBehaviour
             var cellPosition = new Vector2Int(x, y);
 
             if (initialPosition == cellPosition) continue;
-            if (createdFoodPositions.Contains(cellPosition)) continue;
+            if (!_availableCells[x, y]) continue;
 
             var foodPrefab = FoodPrefabs[Random.Range(0, FoodPrefabs.Count)];
             FoodObject newFood = Instantiate(foodPrefab);
@@ -107,8 +112,8 @@ public class BoardManager : MonoBehaviour
             };
 
             _cells[x, y] = cell;
-            createdFoodPositions[createdFoodCounter] = cellPosition;
             createdFoodCounter++;
+            _availableCells[x, y] = false;
             OnFoodCreated?.Invoke(newFood);
         }
     }
