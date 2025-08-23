@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         BoardManager.Initialize();
-        PlayerController.Spawn(BoardManager, BoardManager.GetInitialPosition());
+        SpawnPlayer();
     }
 
     void Update()
@@ -50,5 +50,17 @@ public class GameManager : MonoBehaviour
     public void OnTurnFinished()
     {
         FoodManager.ConsumeFood();
+    }
+
+    public void OnLevelFinished()
+    {
+        BoardManager.GenerateNewLevel();
+        FoodManager.ResetFood();
+        SpawnPlayer();
+    }
+
+    private void SpawnPlayer()
+    {
+        PlayerController.Spawn(BoardManager, BoardManager.GetInitialPosition());
     }
 }

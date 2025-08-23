@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -30,7 +31,15 @@ public class BoardManager : MonoBehaviour
 
         Player.OnPlayerMoved += HandlePlayerMoved;
 
-        BuildMap();
+        BuildMap(fromScratch: true);
+        GenerateObstacles();
+        GenerateFood();
+    }
+
+    public void GenerateNewLevel()
+    {
+        ClearCurrentLevel();
+        BuildMap(fromScratch: true);
         GenerateObstacles();
         GenerateFood();
     }
@@ -78,7 +87,7 @@ public class BoardManager : MonoBehaviour
         _cells[newPosition.x, newPosition.y].ContainedObject?.OnPlayerEntered();
     }
 
-    private void BuildMap()
+    private void BuildMap(bool fromScratch)
     {
         var initialPosition = GetInitialPosition();
         for (int y = 0; y < Height; ++y)
@@ -86,7 +95,7 @@ public class BoardManager : MonoBehaviour
             for (int x = 0; x < Width; ++x)
             {
                 var isExitTile = x == Width - 2 && y == Height - 1;
-                if (isExitTile)
+                if (isExitTile && fromScratch)
                 {
                     ExitObject exitPrefab = Instantiate(ExitPrefab);
                     exitPrefab.transform.position = new Vector3Int(x, y, 0);
@@ -97,8 +106,7 @@ public class BoardManager : MonoBehaviour
                     continue;
                 }
 
-                bool isWallTile = x == 0 || y == 0 || x == Width - 1 || y == Height - 1;
-                if (isWallTile)
+                if (IsWallTile(x, y) && fromScratch)
                 {
                     int wallTileNumber = Random.Range(0, WallTiles.Length);
                     _tilemap.SetTile(new Vector3Int(x, y, 0), WallTiles[wallTileNumber]);
@@ -183,6 +191,31 @@ public class BoardManager : MonoBehaviour
         var x = Random.Range(1, Width - 1);
         var y = Random.Range(1, Height - 1);
         return new Vector2Int(x, y);
+    }
+
+    private bool IsWallTile(int x, int y)
+    {
+        return x == 0 || y == 0 || x == Width - 1 || y == Height - 1;
+    }
+
+    private void ClearCurrentLevel()
+    {
+        for (int y = 0; y < Height; ++y)
+        {
+            for (int x = 0; x < Width; ++x)
+            {
+                if (IsWallTile(x, y)) continue;
+
+                var cell = _cells[x, y];
+                if (cell.ContainedObject != null)
+                {
+                    Destroy(cell.ContainedObject.gameObject);
+                }
+                _cells[x, y] = new CellData();
+                _availableCells[x, y] = true;
+                _tilemap.SetTile(new Vector3Int(x, y, 0), null);
+            }
+        }
     }
 
     private struct CellData

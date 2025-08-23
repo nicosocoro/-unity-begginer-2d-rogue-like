@@ -2,8 +2,19 @@ using UnityEngine;
 
 public class FoodManager : MonoBehaviour
 {
-    private int _food = 10;
+    private int _initialFood = 10;
+    private int _food;
     public int Food { get => _food; private set { _food = value; } }
+
+    public FoodManager()
+    {
+        ResetFood();
+    }
+
+    public void ResetFood()
+    {
+        _food = _initialFood;
+    }
 
     public void ConsumeFood()
     {
@@ -19,7 +30,7 @@ public class FoodManager : MonoBehaviour
     {
         food.OnFoodConsumed += OnFoodConsumed;
     }
-    
+
     private void OnFoodConsumed(FoodObject food)
     {
         IncreaseFood(food.FoodEarnedOnEntered);
