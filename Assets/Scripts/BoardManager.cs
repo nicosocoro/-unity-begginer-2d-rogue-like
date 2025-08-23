@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -75,7 +74,6 @@ public class BoardManager : MonoBehaviour
 
     public void OnFreeCell(Vector2Int position)
     {
-        Debug.Log($"Freeing cell at {position}");
         _availableCells[position.x, position.y] = true;
         _cells[position.x, position.y] = new CellData { IsPassable = true, ContainedObject = null };
 
