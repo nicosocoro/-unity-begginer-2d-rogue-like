@@ -20,7 +20,5 @@ public class TurnManager
     {
         Turn++;
         OnTurnFinished?.Invoke();
-        
-        Debug.Log($"Turn {Turn} finished.");
     }
 }
