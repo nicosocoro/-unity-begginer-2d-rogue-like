@@ -103,6 +103,7 @@ public class BoardManager : MonoBehaviour
                     _cells[x, y] = new CellData { IsPassable = true, ContainedObject = exitPrefab };
                     _availableCells[x, y] = false;
                     _tilemap.SetTile(new Vector3Int(x, y, 0), ExitTile);
+                    exitPrefab.OnPlayerEnteredEvent += GameManager.Instance.OnLevelFinished;
                     continue;
                 }
 
