@@ -10,7 +10,10 @@ public class GameManager : MonoBehaviour
     public UIDocument uiFood;
 
     private TurnManager _turnManager;
-    private Label _uiLabel;
+    private Label _foodLabel;
+    private Label _levelLabel;
+
+    private int _currentLevel = 1;
 
     void Awake()
     {
@@ -26,7 +29,9 @@ public class GameManager : MonoBehaviour
         _turnManager = new TurnManager(PlayerController);
 
         _turnManager.OnTurnFinished += OnTurnFinished;
-        _uiLabel = uiFood.rootVisualElement.Q<Label>("FoodLabel");
+
+        _foodLabel = uiFood.rootVisualElement.Q<Label>("FoodLabel");
+        _levelLabel = uiFood.rootVisualElement.Q<Label>("LevelLabel");
 
         BoardManager.OnFoodCreated += FoodManager.OnFoodCreated;
     }
@@ -40,11 +45,12 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         UpdateFoodLabel();
+        UpdateLevelLabel();
     }
 
     void UpdateFoodLabel()
     {
-        _uiLabel.text = $"Food: {FoodManager.Food}";
+        _foodLabel.text = $"Food: {FoodManager.Food}";
     }
 
     public void OnTurnFinished()
@@ -57,10 +63,17 @@ public class GameManager : MonoBehaviour
         BoardManager.GenerateNewLevel();
         FoodManager.ResetFood();
         SpawnPlayer();
+
+        _currentLevel++;
     }
 
     private void SpawnPlayer()
     {
         PlayerController.Spawn(BoardManager, BoardManager.GetInitialPosition());
+    }
+
+    private void UpdateLevelLabel()
+    {
+        _levelLabel.text = $"Level: {_currentLevel}";
     }
 }
