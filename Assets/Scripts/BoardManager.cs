@@ -13,8 +13,10 @@ public class BoardManager : MonoBehaviour
     public int Height;
     public Tile[] GroundTiles;
     public Tile[] WallTiles;
+    public Tile ExitTile;
     public List<FoodObject> FoodPrefabs;
     public ObstacleObject ObstaclePrefab;
+    public ExitObject ExitPrefab;
     public PlayerController Player;
 
     public event System.Action<FoodObject> OnFoodCreated;
@@ -83,6 +85,18 @@ public class BoardManager : MonoBehaviour
         {
             for (int x = 0; x < Width; ++x)
             {
+                var isExitTile = x == Width - 2 && y == Height - 1;
+                if (isExitTile)
+                {
+                    ExitObject exitPrefab = Instantiate(ExitPrefab);
+                    exitPrefab.transform.position = new Vector3Int(x, y, 0);
+                    exitPrefab.OnInit(new Vector2Int(x, y));
+                    _cells[x, y] = new CellData { IsPassable = true, ContainedObject = exitPrefab };
+                    _availableCells[x, y] = false;
+                    _tilemap.SetTile(new Vector3Int(x, y, 0), ExitTile);
+                    continue;
+                }
+
                 bool isWallTile = x == 0 || y == 0 || x == Width - 1 || y == Height - 1;
                 if (isWallTile)
                 {
@@ -90,13 +104,12 @@ public class BoardManager : MonoBehaviour
                     _tilemap.SetTile(new Vector3Int(x, y, 0), WallTiles[wallTileNumber]);
                     _cells[x, y].IsPassable = false;
                     _availableCells[x, y] = false;
+                    continue;
                 }
-                else
-                {
-                    SetGroundTileTo(y, x);
-                    _cells[x, y].IsPassable = true;
-                    _availableCells[x, y] = initialPosition != new Vector2Int(x, y);
-                }
+
+                SetGroundTileTo(y, x);
+                _cells[x, y].IsPassable = true;
+                _availableCells[x, y] = initialPosition != new Vector2Int(x, y);
             }
         }
     }

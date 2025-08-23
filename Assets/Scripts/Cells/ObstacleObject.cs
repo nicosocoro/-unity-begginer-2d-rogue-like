@@ -3,7 +3,7 @@ using UnityEngine.Tilemaps;
 
 public class ObstacleObject : CellObject
 {
-    private int _lifes = 2;
+    private int _resistance = 2;
 
     public Tile WallTile;
 
@@ -15,9 +15,11 @@ public class ObstacleObject : CellObject
 
     public override bool OnPlayerTryingToEnter()
     {
-        _lifes--;
+        _resistance--;
 
-        if (_lifes <= 0)
+        // change asset based on damage
+
+        if (_resistance <= 0)
         {
             OnDestroy();
             return true;

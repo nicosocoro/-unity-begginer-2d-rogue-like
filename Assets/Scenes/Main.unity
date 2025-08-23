@@ -323,10 +323,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c06cb88541d1e124d869eea7cdc97b99, type: 2}
   WallTiles:
   - {fileID: 11400000, guid: bfe5653f55b2a7f48babdf6c6a0b7550, type: 2}
+  ExitTile: {fileID: 11400000, guid: 7af8c0803ec942c4e8a36d79143bd013, type: 2}
   FoodPrefabs:
   - {fileID: -997849944381644872, guid: a56be142e47fb294393647279414c949, type: 3}
   - {fileID: 2663914227217187178, guid: 9618263fd6e984648b16c8da4ebf9cb7, type: 3}
   ObstaclePrefab: {fileID: 6069803617625050534, guid: 44c0045b0d06e2441a86a8d68fabf95b, type: 3}
+  ExitPrefab: {fileID: 4610297701027138496, guid: 643f89210766d3941bb75ce2dc392e31, type: 3}
   Player: {fileID: 1263106508}
 --- !u!114 &548661647
 MonoBehaviour:
