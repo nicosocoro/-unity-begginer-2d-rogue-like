@@ -7,13 +7,12 @@ public class GameManager : MonoBehaviour
     public BoardManager BoardManager;
     public PlayerController PlayerController;
     public FoodManager FoodManager;
+    public LevelManager LevelManager;
     public UIDocument uiFood;
 
     private TurnManager _turnManager;
     private Label _foodLabel;
     private Label _levelLabel;
-
-    private int _currentLevel = 1;
 
     void Awake()
     {
@@ -64,7 +63,7 @@ public class GameManager : MonoBehaviour
         FoodManager.ResetFood();
         SpawnPlayer();
 
-        _currentLevel++;
+        LevelManager.IncreaseLevel();
     }
 
     private void SpawnPlayer()
@@ -74,6 +73,6 @@ public class GameManager : MonoBehaviour
 
     private void UpdateLevelLabel()
     {
-        _levelLabel.text = $"Level: {_currentLevel}";
+        _levelLabel.text = $"Level: {LevelManager.Level}";
     }
 }
