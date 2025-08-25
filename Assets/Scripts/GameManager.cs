@@ -3,18 +3,27 @@ using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
+    private TurnManager _turnManager;
+    private Label _foodLabel;
+    private Label _levelLabel;
+    private VisualElement _uiGameOverPanel;
+    private bool _isGameActive = true;
+
     public static GameManager Instance;
+
     public BoardManager BoardManager;
     public PlayerController PlayerController;
     public FoodManager FoodManager;
     public LevelManager LevelManager;
     public UIDocument uiMain;
 
-    private TurnManager _turnManager;
-    private Label _foodLabel;
-    private Label _levelLabel;
-    private VisualElement _uiGameOverPanel;
-
+    public bool IsGameActive
+    {
+        get
+        {
+            return _isGameActive;
+        }
+    }
 
     void Awake()
     {
@@ -38,6 +47,7 @@ public class GameManager : MonoBehaviour
 
         BoardManager.OnFoodCreated += FoodManager.OnFoodCreated;
         FoodManager.OnNoMoreFoodLeft += OnGameOver;
+        PlayerController.OnRestartRequested += RestartGame;
     }
 
     void Start()
@@ -64,11 +74,16 @@ public class GameManager : MonoBehaviour
 
     public void OnLevelFinished()
     {
+        GenerateNewLevel();
+
+        LevelManager.IncreaseLevel();
+    }
+
+    private void GenerateNewLevel()
+    {
         BoardManager.GenerateNewLevel();
         FoodManager.ResetFood();
         SpawnPlayer();
-
-        LevelManager.IncreaseLevel();
     }
 
     private void SpawnPlayer()
@@ -83,7 +98,15 @@ public class GameManager : MonoBehaviour
 
     private void OnGameOver()
     {
+        _isGameActive = false;
         _uiGameOverPanel.visible = true;
-        PlayerController.gameObject.SetActive(false);
+    }
+
+    private void RestartGame()
+    { 
+        _uiGameOverPanel.visible = false;
+        LevelManager.Restart();
+        GenerateNewLevel();
+        _isGameActive = true;
     }
 }

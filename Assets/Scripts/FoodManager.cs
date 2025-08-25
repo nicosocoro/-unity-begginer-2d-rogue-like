@@ -3,9 +3,18 @@ using UnityEngine;
 
 public class FoodManager : MonoBehaviour
 {
-    private int _initialFood = 10;
+    private readonly int _initialFood = 5;
     private int _food;
-    public int Food { get => _food; private set { _food = value; } }
+
+    public int Food
+    {
+        get
+        {
+            return _food > 0 ? _food : 0;
+        }
+
+        private set => _food = value;
+    }
 
     public event Action OnNoMoreFoodLeft;
 

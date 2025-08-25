@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     private Vector2Int _currentPosition;
 
     public event Action<Vector2Int> OnPlayerMoved;
+    public event Action OnRestartRequested;
 
     public void Spawn(BoardManager boardManager, Vector2Int cell)
     {
@@ -19,10 +20,17 @@ public class PlayerController : MonoBehaviour
 
     public void Update()
     {
-        HandleInput();
+        if (GameManager.Instance.IsGameActive)
+        {
+            HandleInputInActiveGame();
+        }
+        else
+        {
+            HandleInputInInactiveGame();
+        }
     }
 
-    private void HandleInput()
+    private void HandleInputInActiveGame()
     {
         Vector2Int targetCell = _currentPosition;
 
@@ -46,6 +54,14 @@ public class PlayerController : MonoBehaviour
         if (targetCell != _currentPosition)
         {
             TryMoveTo(targetCell);
+        }
+    }
+
+    private void HandleInputInInactiveGame()
+    {
+        if (Keyboard.current.anyKey.wasPressedThisFrame)
+        {
+            OnRestartRequested?.Invoke();
         }
     }
 
