@@ -376,7 +376,7 @@ MonoBehaviour:
   PlayerController: {fileID: 1263106508}
   FoodManager: {fileID: 935786105}
   LevelManager: {fileID: 1941735699}
-  uiFood: {fileID: 912946316}
+  uiMain: {fileID: 912946316}
 --- !u!4 &615556739
 Transform:
   m_ObjectHideFlags: 0

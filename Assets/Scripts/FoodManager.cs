@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class FoodManager : MonoBehaviour
@@ -5,6 +6,8 @@ public class FoodManager : MonoBehaviour
     private int _initialFood = 10;
     private int _food;
     public int Food { get => _food; private set { _food = value; } }
+
+    public event Action OnNoMoreFoodLeft;
 
     public FoodManager()
     {
@@ -19,6 +22,11 @@ public class FoodManager : MonoBehaviour
     public void ConsumeFood()
     {
         _food--;
+
+        if (_food <= 0)
+        {
+            OnNoMoreFoodLeft?.Invoke();
+        }
     }
 
     public void IncreaseFood(int amount)
