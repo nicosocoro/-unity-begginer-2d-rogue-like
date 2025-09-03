@@ -329,6 +329,7 @@ MonoBehaviour:
   - {fileID: 2663914227217187178, guid: 9618263fd6e984648b16c8da4ebf9cb7, type: 3}
   ObstaclePrefab: {fileID: 6069803617625050534, guid: 44c0045b0d06e2441a86a8d68fabf95b, type: 3}
   ExitPrefab: {fileID: 4610297701027138496, guid: 643f89210766d3941bb75ce2dc392e31, type: 3}
+  EnemyPrefab: {fileID: 5175764695556976929, guid: 5a7ab0eed5e002b4ebb8d8c6ae6c6cf1, type: 3}
   Player: {fileID: 1263106508}
 --- !u!114 &548661647
 MonoBehaviour:

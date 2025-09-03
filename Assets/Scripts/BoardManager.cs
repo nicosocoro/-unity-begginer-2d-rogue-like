@@ -17,6 +17,7 @@ public class BoardManager : MonoBehaviour
     public List<FoodObject> FoodPrefabs;
     public ObstacleObject ObstaclePrefab;
     public ExitObject ExitPrefab;
+    public EnemyObject EnemyPrefab;
     public PlayerController Player;
 
     public event System.Action<FoodObject> OnFoodCreated;
@@ -33,6 +34,7 @@ public class BoardManager : MonoBehaviour
         BuildMap(fromScratch: true);
         GenerateObstacles();
         GenerateFood();
+        SpawnEnemy();
     }
 
     public void GenerateNewLevel()
@@ -183,6 +185,32 @@ public class BoardManager : MonoBehaviour
             _availableCells[cellPosition.x, cellPosition.y] = false;
             OnFoodCreated?.Invoke(newFood);
         }
+    }
+
+    private void SpawnEnemy()
+    {
+        var initialPosition = GetInitialPosition();
+        Vector2Int cellPosition = GenerateRandomCell();
+        var cellCreated = false;
+
+        do
+        {
+            if (initialPosition == cellPosition) continue;
+            if (!_availableCells[cellPosition.x, cellPosition.y]) continue;
+            cellCreated = true;
+        } while (!cellCreated);
+
+        EnemyObject enemy = Instantiate(EnemyPrefab);
+        enemy.OnInit(cellPosition);
+        enemy.transform.position = new Vector3Int(cellPosition.x, cellPosition.y, 0);
+        var cellData = new CellData
+        {
+            IsPassable = true,
+            ContainedObject = enemy
+        };
+
+        _cells[cellPosition.x, cellPosition.y] = cellData;
+        _availableCells[cellPosition.x, cellPosition.y] = false;
     }
 
     private Vector2Int GenerateRandomCell()
